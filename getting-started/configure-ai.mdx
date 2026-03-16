@@ -15,7 +15,7 @@ The MCP server supports the **SSE (Server-Sent Events)** transport at the `/sse`
 | Client          | Transport     | Bridge Required |
 |-----------------|---------------|-----------------|
 | Claude Desktop  | SSE (native)  | No              |
-| Claude Code     | stdio via mcp-remote | Yes      |
+| Claude Code     | SSE (native)  | No              |
 | OpenCode        | SSE (native)  | No              |
 
 ---
@@ -60,30 +60,19 @@ After saving the file, **restart Claude Desktop** to load the new MCP server con
 
 ## Claude Code
 
-Claude Code uses stdio-based MCP transports. To bridge from stdio to the SSE endpoint, Vibe Wallet uses the `mcp-remote` package.
-
-Add this configuration to your project's `.mcp.json` file (at the root of your project):
+Claude Code supports SSE transports natively. Add this to your project's `.mcp.json` file (at the root of your project):
 
 ```json
 {
   "mcpServers": {
     "vibe-wallet": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://vibe-wallet-mcp.fly.dev/sse"]
+      "url": "https://vibe-wallet-mcp.fly.dev/sse"
     }
   }
 }
 ```
 
-### How It Works
-
-1. Claude Code launches `npx -y mcp-remote https://vibe-wallet-mcp.fly.dev/sse` as a child process.
-2. `mcp-remote` connects to the SSE endpoint and bridges MCP messages between Claude Code's stdio and the remote server.
-3. The `-y` flag auto-confirms the npx install prompt, so no manual intervention is needed.
-
-<Info>
-  The `mcp-remote` package is downloaded and cached automatically by npx on first use. Subsequent launches are near-instant.
-</Info>
+That's it — Claude Code connects directly to the SSE endpoint with no bridge or extra packages needed.
 
 ---
 

@@ -37,24 +37,21 @@ description: "Common issues and solutions for Vibe Wallet"
 
 ### Claude Code Setup
 
-Claude Code uses `mcp-remote` as a stdio bridge to connect to the MCP server. Do **not** point Claude Code directly at the SSE URL.
-
-Correct configuration example:
+Claude Code supports SSE natively. Point it directly at the SSE URL in your `.mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "vibe-wallet": {
-      "command": "npx",
-      "args": ["mcp-remote", "https://your-server-url/sse"]
+      "url": "https://vibe-wallet-mcp.fly.dev/sse"
     }
   }
 }
 ```
 
-<Warning>
-Using the SSE URL directly (without mcp-remote) will not work with Claude Code. The stdio bridge is required.
-</Warning>
+<Info>
+No bridge or extra packages needed — Claude Code connects to the SSE endpoint directly.
+</Info>
 
 ## Account and Network Errors
 

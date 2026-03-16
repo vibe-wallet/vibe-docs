@@ -42,20 +42,17 @@ Add the Vibe Wallet MCP server to your AI client configuration.
     </Info>
   </Tab>
   <Tab title="Claude Code">
-    Claude Code uses `mcp-remote` as a stdio-to-SSE bridge. Add this to your project's `.mcp.json` or global MCP config:
+    Claude Code supports SSE natively. Add this to your project's `.mcp.json`:
 
     ```json
     {
       "mcpServers": {
         "vibe-wallet": {
-          "command": "npx",
-          "args": ["-y", "mcp-remote", "https://vibe-wallet-mcp.fly.dev/sse"]
+          "url": "https://vibe-wallet-mcp.fly.dev/sse"
         }
       }
     }
     ```
-
-    The `mcp-remote` package is fetched automatically by `npx` on first use.
   </Tab>
 </Tabs>
 
