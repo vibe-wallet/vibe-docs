@@ -1,0 +1,60 @@
+---
+title: "Server Setup"
+description: "Set up the Vibe Wallet MCP server for local development."
+---
+
+## Tech Stack
+
+- **Express** for HTTP and SSE endpoints
+- **ws** for WebSocket connections to the Chrome extension
+- **@modelcontextprotocol/sdk** for MCP protocol handling
+- **TypeScript** compiled with `tsc`
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start dev server with `tsx watch` (auto-restart on changes) |
+| `pnpm build` | Compile TypeScript with `tsc` |
+| `pnpm start` | Run the compiled server |
+| `pnpm test` | Run E2E tests |
+
+## Development Workflow
+
+<Steps>
+  <Step title="Install dependencies">
+    ```bash
+    cd server
+    pnpm install
+    ```
+  </Step>
+  <Step title="Start the dev server">
+    ```bash
+    pnpm dev
+    ```
+    The server starts on port 3000 by default. Set the `PORT` environment variable to change it.
+  </Step>
+  <Step title="Connect the extension">
+    With the Chrome extension loaded and running, it will connect to the server via WebSocket automatically. Check the server logs for the identity pairing message.
+  </Step>
+</Steps>
+
+## Project Structure
+
+The server is a single file: `src/index.ts` (~190 lines). See [Server Architecture](/development/server-architecture) for a detailed breakdown.
+
+## Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | `3000` | HTTP server port |
+
+## Deployment
+
+The server deploys to **Fly.io**:
+
+```bash
+fly deploy
+```
+
+The `fly.toml` configuration file in the server directory handles the deployment settings.

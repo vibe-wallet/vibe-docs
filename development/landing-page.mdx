@@ -1,0 +1,58 @@
+---
+title: "Landing Page"
+description: "Set up and develop the Vibe Wallet landing page."
+---
+
+## Tech Stack
+
+- **Next.js 16.1.4** with App Router
+- **Tailwind CSS v4** for styling
+- **Framer Motion** for animations
+- **Lucide React** for icons
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start Next.js dev server |
+| `pnpm build` | Production build |
+| `pnpm start` | Serve the production build |
+
+## Development Workflow
+
+<Steps>
+  <Step title="Install dependencies">
+    ```bash
+    cd web
+    pnpm install
+    ```
+  </Step>
+  <Step title="Start the dev server">
+    ```bash
+    pnpm dev
+    ```
+  </Step>
+</Steps>
+
+## Project Structure
+
+The landing page is a single-page application. The main content lives in `app/page.tsx`.
+
+### Page Content
+
+- Overview of all **27 MCP tools** supported by Vibe Wallet
+- **Architecture diagram** showing how Claude, the MCP server, and the extension interact
+- Feature highlights and usage examples
+
+## Deployment
+
+The landing page is deployed on **Netlify** with the Next.js standalone output mode:
+
+```js
+// next.config.js
+{
+  output: "standalone"
+}
+```
+
+Netlify automatically detects the Next.js framework and handles the build and deployment pipeline.

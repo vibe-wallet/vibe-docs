@@ -1,0 +1,98 @@
+---
+title: "Send Your First Transaction"
+description: "A step-by-step guide to sending your first ETH transaction with Vibe Wallet"
+---
+
+## Prerequisites
+
+Before sending a transaction, make sure the Vibe Wallet extension is connected and showing a **green status indicator**. This confirms the WebSocket connection between the extension and the MCP server is active.
+
+## Step 1: Get Testnet ETH
+
+You need testnet ETH to pay for gas and send transactions. Use one of these faucets depending on your network:
+
+- **Sepolia**: Visit [sepoliafaucet.com](https://sepoliafaucet.com) and paste your wallet address
+- **Base Sepolia**: Use the [Base Bridge](https://bridge.base.org) to bridge Sepolia ETH to Base Sepolia
+
+<Tip>
+Testnet faucets may impose rate limits or require a minimum mainnet balance. If one faucet is dry, try another.
+</Tip>
+
+## Step 2: Check Your Balance
+
+Ask your AI assistant:
+
+```
+What's my ETH balance?
+```
+
+This calls `wallet_getBalance` and returns your current balance in ETH. If the balance is zero, revisit Step 1 and confirm you requested funds on the correct network.
+
+## Step 3: Send ETH
+
+Ask your AI assistant:
+
+```
+Send 0.001 ETH to 0xRecipientAddressHere
+```
+
+The AI will construct the transaction using `wallet_sendTransaction` with the appropriate parameters.
+
+## Step 4: Approve the Transaction
+
+Depending on your settings, one of two things happens:
+
+- **Standard mode**: A popup appears in the extension asking you to review and approve the transaction. Verify the recipient address and amount before confirming.
+- **YOLO mode**: The transaction is auto-approved and sent immediately without a popup.
+
+<Warning>
+YOLO mode skips all confirmation prompts. Only enable it on testnets or when you fully trust the AI context.
+</Warning>
+
+## Step 5: Verify the Transaction
+
+Ask your AI assistant:
+
+```
+Show my recent transactions
+```
+
+This calls `wallet_getTransactionHistory` and displays your latest transactions, including the one you just sent.
+
+## Tips
+
+### Gas Estimation
+
+Before sending a transaction, you can ask:
+
+```
+Estimate the gas for sending 0.001 ETH to 0x...
+```
+
+This calls `wallet_estimateGas` and returns the estimated gas units required. Useful for understanding costs before committing.
+
+### Check Gas Price
+
+```
+What's the current gas price?
+```
+
+Calls `wallet_getGasPrice` to return the current gas price on the active network. Higher gas prices mean faster confirmation but higher fees.
+
+### Check Block Number
+
+```
+What's the current block number?
+```
+
+Calls `wallet_getBlockNumber` to return the latest block. This is helpful for confirming network activity or debugging delayed transactions.
+
+### Network Awareness
+
+Always verify which network you are connected to before sending real value:
+
+```
+What network am I on?
+```
+
+This calls `wallet_getNetwork` and returns the current chain. Switch networks with `wallet_switchNetwork` if needed.

@@ -1,0 +1,81 @@
+---
+title: 'Introduction'
+description: 'Vibe Wallet is an AI-native crypto wallet controlled entirely through the Model Context Protocol (MCP).'
+icon: 'wallet'
+---
+
+# Vibe Wallet
+
+Vibe Wallet is a developer-first, AI-native crypto wallet designed to be controlled by agentic AI — such as Claude or OpenCode — through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io). Instead of clicking buttons in a traditional wallet UI, you issue natural-language commands and your AI agent handles the rest.
+
+Built for the **MCP Hackathon**, Vibe Wallet demonstrates how AI agents can securely manage blockchain assets across multiple chains with zero manual configuration.
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="27 MCP Tools" icon="screwdriver-wrench">
+    A comprehensive tool suite covering transactions, token management, account switching, contract calls, and more — all exposed as MCP tools your AI can invoke.
+  </Card>
+  <Card title="Multi-Chain" icon="link">
+    First-class support for **Ethereum (EVM)** chains (Sepolia, Base Sepolia, Arbitrum Sepolia) and **Solana** (Devnet, Mainnet) in a single wallet.
+  </Card>
+  <Card title="Smart IP Pairing" icon="wifi">
+    Zero-config session isolation. The server automatically pairs your AI client and browser extension based on your public IP address — no privacy keys or manual setup required.
+  </Card>
+  <Card title="Security Modes" icon="shield-halved">
+    Choose between **Confirmation Mode** (manual approval popups for every sensitive action) and **YOLO Mode** (auto-approve for rapid AI development on testnets).
+  </Card>
+  <Card title="Multi-Account Management" icon="users">
+    Create, import, switch, and delete multiple wallet accounts. The AI stays in sync with your active account in real time.
+  </Card>
+  <Card title="Real-Time Dashboard" icon="chart-line">
+    A premium React dashboard at [vibe-dashboard.netlify.app](https://vibe-dashboard.netlify.app) with auto-connect, live state synchronization, and a cyberpunk-inspired UI.
+  </Card>
+</CardGroup>
+
+## Architecture
+
+Vibe Wallet follows a three-tier architecture where the AI client communicates with the MCP server over SSE, and the browser extension connects via WebSocket. IP-based isolation ensures each user's session is private.
+
+```
++------------------+          +----------------------+          +---------------------+
+|    AI Client     |   SSE    |   Vibe Wallet MCP    |    WS    |  Browser Extension  |
+| (Claude/OpenCode)| <------> |       Server         | <------> |   (Local Machine)   |
+|                  |  /sse    |     (Fly.io)         |   /ws    |                     |
++------------------+          +----------------------+          +---------------------+
+                                        |
+                             [ AUTO-IP ISOLATION ]
+                                        |
+                              +------------------+
+                              |    Blockchain    |
+                              | Ethereum / Solana|
+                              +------------------+
+```
+
+**How it works:**
+
+1. **AI Client** connects to the MCP server over SSE (`/sse` endpoint) and sends tool calls using the MCP protocol.
+2. **MCP Server** (deployed on Fly.io) routes requests to the correct browser extension instance using IP-based session matching.
+3. **Browser Extension** executes the actual blockchain operations — signing transactions, querying balances, managing accounts — and returns results back through the server to the AI.
+4. **Blockchain** networks (Ethereum testnets, Solana Devnet) are accessed through the extension's built-in RPC providers.
+
+## Supported Networks
+
+| Chain    | Networks                                     |
+|----------|----------------------------------------------|
+| Ethereum | Sepolia, Base Sepolia, Arbitrum Sepolia       |
+| Solana   | Devnet, Mainnet                               |
+
+## Next Steps
+
+<CardGroup cols={3}>
+  <Card title="Quickstart" icon="rocket" href="/getting-started/quickstart">
+    Get up and running in under 5 minutes.
+  </Card>
+  <Card title="MCP Tools Reference" icon="book" href="/tools-reference">
+    Explore all 27 MCP tools available to your AI agent.
+  </Card>
+  <Card title="Architecture" icon="sitemap" href="/architecture">
+    Deep dive into the system design and security model.
+  </Card>
+</CardGroup>

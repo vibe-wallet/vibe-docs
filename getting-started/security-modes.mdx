@@ -1,0 +1,138 @@
+---
+title: 'Security Modes'
+description: 'Understand how Vibe Wallet protects your assets with Confirmation Mode and YOLO Mode.'
+icon: 'shield-halved'
+---
+
+# Security Modes
+
+Vibe Wallet provides two security modes that control how MCP tool requests from your AI agent are handled. The right mode depends on whether you prioritize safety or speed.
+
+## Confirmation Mode (Default)
+
+Confirmation Mode is the default security setting. Every sensitive action initiated by the AI agent triggers an **approval popup** in the browser extension. The transaction will not execute until you explicitly click **Approve**.
+
+### How It Works
+
+1. Your AI agent invokes a sensitive MCP tool (e.g., `wallet_sendTransaction`).
+2. The MCP server forwards the request to your browser extension.
+3. A popup appears in the extension showing the full details of the request:
+   - **Method**: The MCP tool being called (e.g., `wallet_sendTransaction`)
+   - **Parameters**: The transaction details (recipient address, amount, gas, etc.)
+   - **Request metadata**: Timestamp and source information
+4. You review the details and click **Approve** or **Reject**.
+5. The result is sent back through the MCP server to the AI agent.
+
+<Info>
+  The AI agent will wait for your response. If you do not interact with the popup, the request will eventually time out and the AI will receive an error.
+</Info>
+
+### When to Use
+
+- When working with **mainnet** or any chain where real value is at stake
+- When you want to review every action the AI takes before execution
+- When you are still learning the system and want to understand what each tool does
+- In production or shared environments
+
+---
+
+## YOLO Mode
+
+YOLO Mode auto-approves **all** MCP-initiated requests from the AI agent. There are no popups — the AI has full autonomous control over your wallet.
+
+### How to Enable
+
+<Steps>
+  <Step title="Open Extension Settings">
+    Click the Vibe Wallet icon in Chrome and navigate to **Settings**.
+  </Step>
+  <Step title="Toggle YOLO Mode">
+    Find the **YOLO Mode** toggle and switch it on. The extension will display a warning banner confirming that automatic approval is active.
+  </Step>
+</Steps>
+
+### How It Works
+
+1. Your AI agent invokes a sensitive MCP tool (e.g., `wallet_sendTransaction`).
+2. The MCP server forwards the request to your browser extension.
+3. The extension **automatically approves** the request without showing a popup.
+4. The result is immediately sent back to the AI agent.
+
+### Important Behavior
+
+- **MCP requests are auto-approved**: Any tool call originating from the AI agent through the MCP server is executed without confirmation.
+- **Standard DApp requests still require manual confirmation**: If a website (DApp) triggers a transaction through the extension's injected provider (not via MCP), the extension will still show the standard approval popup. YOLO Mode only affects AI-initiated MCP requests.
+
+<Warning>
+  **Use YOLO Mode on testnets only.** When enabled, the AI can send transactions, sign messages, transfer tokens, and approve spending — all without your confirmation. Only use this mode when:
+  - You are on a **testnet** (Sepolia, Base Sepolia, Arbitrum Sepolia, Solana Devnet)
+  - You are doing **rapid prototyping** or automated testing
+  - You fully trust the AI's logic for the current session
+</Warning>
+
+---
+
+## Tools That Require Approval
+
+The following MCP tools are classified as **sensitive** and require explicit approval in Confirmation Mode (or are auto-approved in YOLO Mode):
+
+### EVM (Ethereum) Tools
+
+| Tool                     | Description                        |
+|--------------------------|------------------------------------|
+| `wallet_sendTransaction` | Send ETH to an address             |
+| `wallet_signMessage`     | Sign an arbitrary message          |
+| `wallet_sendToken`       | Transfer ERC-20 tokens             |
+| `wallet_approveToken`    | Approve a spender for ERC-20 tokens|
+
+### Solana Tools
+
+| Tool                       | Description                      |
+|----------------------------|----------------------------------|
+| `solana_sendTransaction`   | Send SOL to an address           |
+| `solana_signMessage`       | Sign an arbitrary message        |
+
+### Read-Only Tools (No Approval Required)
+
+The following tools are read-only and never require approval, regardless of which security mode is active:
+
+| Tool                          | Description                              |
+|-------------------------------|------------------------------------------|
+| `wallet_getAddress`           | Get active wallet address                |
+| `wallet_getBalance`           | Get ETH balance                          |
+| `wallet_getNetwork`           | Get current network info                 |
+| `wallet_getTokenBalance`      | Get ERC-20 token balance                 |
+| `wallet_getBlockNumber`       | Get latest block number                  |
+| `wallet_getGasPrice`          | Get current gas price                    |
+| `wallet_estimateGas`          | Estimate gas for a transaction           |
+| `wallet_callContract`         | Execute a read-only contract call        |
+| `wallet_getTransactionHistory`| Get recent transaction history           |
+| `wallet_getStatus`            | Check wallet connection status           |
+| `wallet_listAccounts`         | List all local accounts                  |
+| `wallet_listInstances`        | List connected wallet instances          |
+| `wallet_selectAccount`        | Switch active account                    |
+| `wallet_selectInstance`        | Select which device to control           |
+| `wallet_createAccount`        | Create a new account                     |
+| `wallet_importAccount`        | Import account from private key          |
+| `wallet_deleteAccount`        | Delete an account                        |
+| `wallet_switchNetwork`        | Switch to a different network            |
+| `solana_getAddress`           | Get active Solana address                |
+| `solana_getBalance`           | Get SOL balance                          |
+| `solana_getAirdrop`           | Request SOL Devnet airdrop               |
+
+---
+
+## Security Recommendations
+
+<CardGroup cols={2}>
+  <Card title="For Development" icon="code">
+    Use **YOLO Mode** on testnets for fast iteration. Switch to Confirmation Mode before moving to mainnet.
+  </Card>
+  <Card title="For Production" icon="lock">
+    Always use **Confirmation Mode**. Review every transaction before signing. Never enable YOLO Mode with real funds at stake.
+  </Card>
+</CardGroup>
+
+<Tip>
+  You can switch between security modes at any time without restarting the extension or AI client. The change takes effect immediately for the next MCP request.
+</Tip>

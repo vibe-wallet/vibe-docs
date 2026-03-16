@@ -1,0 +1,38 @@
+---
+title: "wallet_estimateGas"
+description: "Estimate gas for a transaction"
+icon: "calculator"
+---
+
+# wallet_estimateGas
+
+Estimate the gas required for a transaction without actually sending it. Useful for previewing transaction costs.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `to` | string | Yes | The target address (0x-prefixed) |
+| `value` | string | No | Amount of ETH to send in wei (hex-encoded) |
+| `data` | string | No | Encoded calldata for contract interactions (hex-encoded) |
+
+## Returns
+
+A hex-encoded string representing the estimated gas units (e.g., `"0x5208"` for 21000 gas).
+
+## Example
+
+```
+"How much gas would it cost to send 1 ETH to 0x742d...?"
+```
+
+```
+"Estimate gas for calling this contract"
+```
+
+## Notes
+
+- No approval required.
+- The estimate is approximate and actual gas usage may vary.
+- Multiply the gas estimate by the gas price (from `wallet_getGasPrice`) to get the total cost in wei.
+- This is an EVM-only tool.

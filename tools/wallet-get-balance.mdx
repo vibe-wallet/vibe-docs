@@ -1,0 +1,35 @@
+---
+title: "wallet_getBalance"
+description: "Get the ETH balance of the active account"
+icon: "coins"
+---
+
+# wallet_getBalance
+
+Get the native ETH balance of the currently active EVM account on the current network.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+A hex-encoded string representing the balance in wei (e.g., `"0xDE0B6B3A7640000"` for 1 ETH).
+
+## Example
+
+```
+"What's my ETH balance?"
+```
+
+```
+"How much ETH do I have?"
+```
+
+## Notes
+
+- Returns the balance in wei as a hex string. Divide by 10^18 to get ETH.
+- The balance is for the currently selected network. Use `wallet_switchNetwork` to change networks.
+- No approval required.
+- For ERC-20 token balances, use `wallet_getTokenBalance`.
+- For SOL balance, use `solana_getBalance`.

@@ -1,0 +1,167 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Vibe Wallet",
+  "logo": {
+    "dark": "/images/logo-dark.svg",
+    "light": "/images/logo-light.svg"
+  },
+  "favicon": "/images/favicon.svg",
+  "colors": {
+    "primary": "#8B5CF6",
+    "light": "#A78BFA",
+    "dark": "#7C3AED",
+    "anchors": {
+      "from": "#8B5CF6",
+      "to": "#EC4899"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Dashboard",
+      "url": "https://vibe-dashboard.netlify.app"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "GitHub",
+    "url": "https://github.com/vibe-wallet"
+  },
+  "tabs": [
+    {
+      "name": "Tools Reference",
+      "url": "tools"
+    },
+    {
+      "name": "Development",
+      "url": "development"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/vibe-wallet"
+    },
+    {
+      "name": "Dashboard",
+      "icon": "chart-line",
+      "url": "https://vibe-dashboard.netlify.app"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "getting-started/quickstart",
+        "getting-started/install-extension",
+        "getting-started/configure-ai",
+        "getting-started/security-modes"
+      ]
+    },
+    {
+      "group": "Architecture",
+      "pages": [
+        "architecture/overview",
+        "architecture/ip-pairing",
+        "architecture/data-flow",
+        "architecture/supported-networks"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        "guides/first-transaction",
+        "guides/multi-account",
+        "guides/solana",
+        "guides/deployment",
+        "guides/troubleshooting"
+      ]
+    },
+    {
+      "group": "Tools Reference",
+      "pages": ["tools/overview"]
+    },
+    {
+      "group": "Connectivity",
+      "pages": [
+        "tools/wallet-list-instances",
+        "tools/wallet-select-instance",
+        "tools/wallet-get-status"
+      ]
+    },
+    {
+      "group": "Account Management",
+      "pages": [
+        "tools/wallet-list-accounts",
+        "tools/wallet-select-account",
+        "tools/wallet-create-account",
+        "tools/wallet-import-account",
+        "tools/wallet-delete-account"
+      ]
+    },
+    {
+      "group": "EVM Assets",
+      "pages": [
+        "tools/wallet-get-address",
+        "tools/wallet-get-balance",
+        "tools/wallet-get-network",
+        "tools/wallet-switch-network",
+        "tools/wallet-send-transaction",
+        "tools/wallet-sign-message",
+        "tools/wallet-get-token-balance",
+        "tools/wallet-send-token",
+        "tools/wallet-approve-token"
+      ]
+    },
+    {
+      "group": "Solana",
+      "pages": [
+        "tools/solana-get-address",
+        "tools/solana-get-balance",
+        "tools/solana-get-airdrop",
+        "tools/solana-send-transaction",
+        "tools/solana-sign-message"
+      ]
+    },
+    {
+      "group": "Blockchain Info",
+      "pages": [
+        "tools/wallet-get-block-number",
+        "tools/wallet-get-gas-price",
+        "tools/wallet-get-transaction-history",
+        "tools/wallet-estimate-gas",
+        "tools/wallet-call-contract"
+      ]
+    },
+    {
+      "group": "Development",
+      "pages": ["development/overview"]
+    },
+    {
+      "group": "Extension",
+      "pages": [
+        "development/extension-setup",
+        "development/extension-architecture",
+        "development/extension-testing"
+      ]
+    },
+    {
+      "group": "MCP Server",
+      "pages": [
+        "development/server-setup",
+        "development/server-architecture",
+        "development/server-testing"
+      ]
+    },
+    {
+      "group": "Dashboard & Web",
+      "pages": [
+        "development/dashboard",
+        "development/landing-page"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/vibe-wallet"
+  }
+}

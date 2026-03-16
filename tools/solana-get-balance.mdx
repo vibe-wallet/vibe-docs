@@ -1,0 +1,34 @@
+---
+title: "solana_getBalance"
+description: "Get the SOL balance in lamports"
+icon: "coins"
+---
+
+# solana_getBalance
+
+Get the native SOL balance of the currently active Solana account.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+A string representing the balance in lamports (e.g., `"1000000000"` for 1 SOL).
+
+## Example
+
+```
+"What's my SOL balance?"
+```
+
+```
+"How much Solana do I have?"
+```
+
+## Notes
+
+- Returns the balance in lamports. Divide by 10^9 to get SOL.
+- No approval required.
+- Make sure a Solana account is active and the network is set to a Solana network.
+- For ETH balance, use `wallet_getBalance` instead.

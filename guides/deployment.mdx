@@ -1,0 +1,116 @@
+---
+title: "Deployment Guide"
+description: "Deploy the Vibe Wallet MCP server, browser extension, dashboard, and landing page"
+---
+
+## Architecture Overview
+
+Vibe Wallet consists of four deployable components:
+
+| Component | Technology | Deployment Target |
+|---|---|---|
+| MCP Server | Node.js / WebSocket | Fly.io |
+| Browser Extension | Chrome Extension (Manifest V3) | Manual distribution |
+| Dashboard | React SPA | Netlify / Vercel |
+| Landing Page | Next.js | Netlify |
+
+## MCP Server
+
+The MCP server is the backend that bridges AI assistants and the browser extension over WebSocket.
+
+### Deploy to Fly.io
+
+From the server directory:
+
+```bash
+fly deploy
+```
+
+Fly.io handles SSL/TLS termination automatically, so WebSocket connections are secured without additional configuration.
+
+### Persistent Volumes
+
+For production deployments, attach a Fly.io persistent volume to store account data and session state:
+
+```bash
+fly volumes create vibe_data --size 1 --region ord
+```
+
+Reference the volume in your `fly.toml` to mount it at the appropriate path.
+
+## Browser Extension
+
+### Build
+
+```bash
+pnpm build
+```
+
+This produces a `dist/` folder containing the compiled extension.
+
+### Distribute
+
+1. Zip the `dist/` folder
+2. Share the zip file with users, or upload to the Chrome Web Store for public distribution
+3. Users load the extension via `chrome://extensions` with "Developer mode" enabled, then "Load unpacked" pointing to the extracted `dist/` folder
+
+## Dashboard
+
+The monitoring dashboard is deployed as a static site.
+
+### Deploy to Netlify
+
+The dashboard is live at [vibe-dashboard.netlify.app](https://vibe-dashboard.netlify.app). To deploy your own instance:
+
+```bash
+netlify deploy --prod --dir=dist
+```
+
+### Deploy to Vercel
+
+```bash
+vercel --prod
+```
+
+## Landing Page
+
+The landing page is a Next.js application.
+
+### Configuration
+
+Ensure your `next.config` includes the standalone output mode:
+
+```js
+const nextConfig = {
+  output: "standalone",
+};
+```
+
+### Deploy to Netlify
+
+```bash
+netlify deploy --prod
+```
+
+## Multi-Machine Testing
+
+When testing across multiple machines (e.g., the extension on a laptop and Claude Code on a remote server), you need network connectivity between them.
+
+### Tunneling Setup
+
+Use a tunneling service to expose the MCP server:
+
+```bash
+# Example with a tunnel to the local server
+# Forward the WebSocket port so remote clients can connect
+```
+
+### Remote WebSocket Configuration
+
+In the extension settings, update the WebSocket URL to point to the remote server address instead of `localhost`. Ensure the URL uses `wss://` for encrypted connections over the public internet.
+
+## Cloud Architecture Notes
+
+- **Fly.io** provisions machines close to your users with built-in SSL/TLS. No separate certificate management is needed.
+- **Persistent volumes** on Fly.io survive machine restarts but are region-locked. Choose a region close to your primary users.
+- **WebSocket connections** require long-lived HTTP connections. Ensure any reverse proxy or CDN in front of the server supports WebSocket upgrades.

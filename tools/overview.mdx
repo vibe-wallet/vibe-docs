@@ -1,0 +1,108 @@
+---
+title: "MCP Tools Overview"
+description: "Complete reference for all 27 Vibe Wallet MCP tools"
+icon: "wrench"
+---
+
+# Vibe Wallet MCP Tools
+
+Vibe Wallet exposes 27 MCP tools organized into six categories. These tools allow AI agents to manage wallets, send transactions, query balances, and interact with smart contracts across EVM and Solana networks.
+
+## Categories
+
+<CardGroup cols={2}>
+  <Card title="Connectivity" icon="plug" href="#connectivity">
+    Manage wallet instances and check connection status.
+  </Card>
+  <Card title="Account Management" icon="users" href="#account-management">
+    Create, import, select, and delete accounts.
+  </Card>
+  <Card title="EVM Assets" icon="ethereum" href="#evm-assets">
+    Send ETH/tokens, sign messages, and manage EVM networks.
+  </Card>
+  <Card title="Solana" icon="sun" href="#solana">
+    Send SOL, sign messages, and request devnet airdrops.
+  </Card>
+  <Card title="Blockchain Info" icon="chart-bar" href="#blockchain-info">
+    Query block numbers, gas prices, and transaction history.
+  </Card>
+</CardGroup>
+
+---
+
+## Connectivity
+
+Tools for managing wallet instances and checking connection status.
+
+| Tool | Description | Approval | Account Type |
+|------|-------------|----------|--------------|
+| [`wallet_listInstances`](/tools/wallet-list-instances) | List all connected wallet instances | No | Both |
+| [`wallet_selectInstance`](/tools/wallet-select-instance) | Select which wallet instance to control | No | Both |
+| [`wallet_getStatus`](/tools/wallet-get-status) | Check current connection status | No | Both |
+
+## Account Management
+
+Tools for creating, importing, selecting, and deleting accounts.
+
+| Tool | Description | Approval | Account Type |
+|------|-------------|----------|--------------|
+| [`wallet_listAccounts`](/tools/wallet-list-accounts) | List all accounts in the wallet | No | Both |
+| [`wallet_selectAccount`](/tools/wallet-select-account) | Switch the active account | No | Both |
+| [`wallet_createAccount`](/tools/wallet-create-account) | Create a new EVM or Solana account | No | Both |
+| [`wallet_importAccount`](/tools/wallet-import-account) | Import an account from a private key | No | Both |
+| [`wallet_deleteAccount`](/tools/wallet-delete-account) | Delete an account by name | No | Both |
+
+## EVM Assets
+
+Tools for interacting with Ethereum and EVM-compatible networks.
+
+| Tool | Description | Approval | Account Type |
+|------|-------------|----------|--------------|
+| [`wallet_getAddress`](/tools/wallet-get-address) | Get the active EVM address | No | EVM |
+| [`wallet_getBalance`](/tools/wallet-get-balance) | Get the ETH balance of the active account | No | EVM |
+| [`wallet_getNetwork`](/tools/wallet-get-network) | Get the current network name and chain ID | No | EVM |
+| [`wallet_switchNetwork`](/tools/wallet-switch-network) | Switch to a different network | No | Both |
+| [`wallet_sendTransaction`](/tools/wallet-send-transaction) | Send ETH to an address | Yes | EVM |
+| [`wallet_signMessage`](/tools/wallet-sign-message) | Sign a message with the active account | Yes | EVM |
+| [`wallet_getTokenBalance`](/tools/wallet-get-token-balance) | Get the balance of an ERC-20 token | No | EVM |
+| [`wallet_sendToken`](/tools/wallet-send-token) | Send ERC-20 tokens to an address | Yes | EVM |
+| [`wallet_approveToken`](/tools/wallet-approve-token) | Approve a spender for ERC-20 tokens | Yes | EVM |
+
+## Solana
+
+Tools for interacting with the Solana blockchain.
+
+| Tool | Description | Approval | Account Type |
+|------|-------------|----------|--------------|
+| [`solana_getAddress`](/tools/solana-get-address) | Get the active Solana address | No | Solana |
+| [`solana_getBalance`](/tools/solana-get-balance) | Get the SOL balance in lamports | No | Solana |
+| [`solana_getAirdrop`](/tools/solana-get-airdrop) | Request a devnet SOL airdrop | No | Solana |
+| [`solana_sendTransaction`](/tools/solana-send-transaction) | Send SOL to an address | Yes | Solana |
+| [`solana_signMessage`](/tools/solana-sign-message) | Sign a message with the active Solana account | Yes | Solana |
+
+## Blockchain Info
+
+Tools for querying on-chain data and interacting with smart contracts.
+
+| Tool | Description | Approval | Account Type |
+|------|-------------|----------|--------------|
+| [`wallet_getBlockNumber`](/tools/wallet-get-block-number) | Get the latest block number | No | EVM |
+| [`wallet_getGasPrice`](/tools/wallet-get-gas-price) | Get the current gas price | No | EVM |
+| [`wallet_getTransactionHistory`](/tools/wallet-get-transaction-history) | Get recent transactions for the active account | No | EVM |
+| [`wallet_estimateGas`](/tools/wallet-estimate-gas) | Estimate gas for a transaction | No | EVM |
+| [`wallet_callContract`](/tools/wallet-call-contract) | Make a read-only smart contract call | No | EVM |
+
+---
+
+## Approval Required
+
+The following tools modify on-chain state and require explicit user approval before execution:
+
+- `wallet_sendTransaction` -- Send ETH
+- `wallet_signMessage` -- Sign an EVM message
+- `wallet_sendToken` -- Send ERC-20 tokens
+- `wallet_approveToken` -- Approve ERC-20 token spending
+- `solana_sendTransaction` -- Send SOL
+- `solana_signMessage` -- Sign a Solana message
+
+All other tools are read-only or manage local wallet state and do not require approval.

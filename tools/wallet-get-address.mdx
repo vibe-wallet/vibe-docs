@@ -1,0 +1,33 @@
+---
+title: "wallet_getAddress"
+description: "Get the active EVM address"
+icon: "at"
+---
+
+# wallet_getAddress
+
+Get the Ethereum address of the currently active EVM account.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+A `0x`-prefixed Ethereum address string (e.g., `"0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"`).
+
+## Example
+
+```
+"What's my Ethereum address?"
+```
+
+```
+"Show me my EVM wallet address"
+```
+
+## Notes
+
+- Requires an active EVM account. Use `wallet_selectAccount` to switch if needed.
+- No approval required.
+- For Solana addresses, use `solana_getAddress` instead.

@@ -1,0 +1,37 @@
+---
+title: "solana_sendTransaction"
+description: "Send SOL to an address"
+icon: "paper-plane"
+---
+
+# solana_sendTransaction
+
+Send native SOL to a specified Solana address. This is a state-changing operation that requires user approval.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `to` | string | Yes | The recipient Solana address (base58-encoded) |
+| `value` | string | Yes | Amount to send in lamports |
+
+## Returns
+
+A transaction signature string.
+
+## Example
+
+```
+"Send 0.5 SOL to 7EcDhSYGxXyscszYEp35KHN8vvw3svAuLKTzXwCFLtV"
+```
+
+```
+"Transfer 1000000000 lamports to that address"
+```
+
+## Notes
+
+- **Requires approval.** The user must confirm the transaction before it is broadcast.
+- The `value` parameter is in lamports (1 SOL = 1,000,000,000 lamports).
+- Make sure you are connected to a Solana network.
+- For sending ETH, use `wallet_sendTransaction` instead.

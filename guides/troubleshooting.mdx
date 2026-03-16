@@ -1,0 +1,126 @@
+---
+title: "Troubleshooting"
+description: "Common issues and solutions for Vibe Wallet"
+---
+
+## Connection Issues
+
+### "No paired wallet found"
+
+**Cause**: The AI assistant cannot reach the Vibe Wallet extension.
+
+**Solutions**:
+1. Confirm the extension is installed and active (look for the green status indicator)
+2. Check the WebSocket URL in extension settings matches the MCP server address
+3. If testing across machines, ensure both devices are on the same network or that tunneling is configured
+4. Restart the extension by toggling it off and on in `chrome://extensions`
+
+### Connection Drops
+
+**Cause**: The WebSocket connection between the extension and server was interrupted.
+
+**Solutions**:
+1. Check your internet connection
+2. The server sends heartbeat pings and terminates stale connections after **15 seconds** of inactivity. Ensure the extension is in the foreground or that the browser is not aggressively suspending it.
+3. Restart the MCP server if the issue persists
+
+## Extension Issues
+
+### Extension Not Loading Tools
+
+**Cause**: Claude or your AI assistant does not see the Vibe Wallet MCP tools.
+
+**Solutions**:
+1. Restart Claude Desktop or refresh Claude Code
+2. Verify the MCP configuration in your settings file includes the Vibe Wallet server
+3. Check that the server is running and reachable
+
+### Claude Code Setup
+
+Claude Code uses `mcp-remote` as a stdio bridge to connect to the MCP server. Do **not** point Claude Code directly at the SSE URL.
+
+Correct configuration example:
+
+```json
+{
+  "mcpServers": {
+    "vibe-wallet": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://your-server-url/sse"]
+    }
+  }
+}
+```
+
+<Warning>
+Using the SSE URL directly (without mcp-remote) will not work with Claude Code. The stdio bridge is required.
+</Warning>
+
+## Account and Network Errors
+
+### "Method not supported for active wallet type"
+
+**Cause**: You are calling a tool that does not match the active account type. For example, calling `solana_getBalance` while an EVM account is selected, or calling `wallet_sendTransaction` while a Solana account is active.
+
+**Solution**: Switch to the correct account type before calling the tool:
+
+```
+Switch to account "my-evm-account"
+```
+
+or
+
+```
+Switch to account "my-sol-account"
+```
+
+## Transaction Issues
+
+### Transaction Stuck or Pending
+
+**Cause**: Gas price may be too low, or the network is congested.
+
+**Solutions**:
+1. Check the current gas price:
+   ```
+   What's the current gas price?
+   ```
+2. If gas is significantly higher than what was used, the transaction may be waiting for gas prices to drop
+3. On testnets, network congestion is less common; try resending with a fresh nonce
+4. Check the block number to confirm the network is producing blocks:
+   ```
+   What's the current block number?
+   ```
+
+### Transaction Fails Immediately
+
+**Cause**: Insufficient balance, invalid recipient address, or contract revert.
+
+**Solutions**:
+1. Verify your balance covers the amount plus gas fees
+2. Double-check the recipient address format (0x-prefixed for EVM, base58 for Solana)
+3. Use `wallet_estimateGas` before sending to catch reverts early
+
+## YOLO Mode
+
+### YOLO Mode Not Working
+
+**Cause**: The auto-approve setting is in an inconsistent state.
+
+**Solutions**:
+1. Open the extension popup
+2. Toggle YOLO mode **off**
+3. Wait a moment, then toggle it back **on**
+4. Reload the extension from `chrome://extensions`
+
+<Tip>
+YOLO mode auto-approves all transactions without confirmation popups. Only enable this on testnets or in controlled environments.
+</Tip>
+
+## Still Stuck?
+
+If none of the above solutions resolve your issue:
+
+1. Check the browser developer console (`F12` > Console tab) for extension errors
+2. Check the MCP server logs for connection or handler errors
+3. Verify your configuration matches the setup guide exactly

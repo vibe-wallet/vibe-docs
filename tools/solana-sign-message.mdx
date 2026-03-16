@@ -1,0 +1,34 @@
+---
+title: "solana_signMessage"
+description: "Sign a message with the active Solana account"
+icon: "signature"
+---
+
+# solana_signMessage
+
+Sign an arbitrary message with the active Solana account's private key. Commonly used for authentication and off-chain verification.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `message` | string | Yes | The message to sign |
+
+## Returns
+
+A signature string.
+
+## Example
+
+```
+"Sign the message 'Hello Solana' with my Solana account"
+```
+
+```
+"Sign this authentication challenge on Solana"
+```
+
+## Notes
+
+- **Requires approval.** The user must confirm the signing operation.
+- For EVM message signing, use `wallet_signMessage` instead.

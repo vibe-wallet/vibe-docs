@@ -1,0 +1,51 @@
+---
+title: "Supported Networks"
+description: "Blockchain networks supported by Vibe Wallet, including EVM testnets and Solana"
+---
+
+# Supported Networks
+
+Vibe Wallet supports EVM-compatible testnets and Solana networks. All supported networks are testnets or devnets -- **do not use Vibe Wallet with real funds**.
+
+<Warning>
+  Vibe Wallet is designed for testnet use only. Do not import wallets that hold mainnet assets or send real funds through the extension.
+</Warning>
+
+## EVM Testnets
+
+| Network          | Chain ID    | Chain Key          |
+| ---------------- | ----------- | ------------------ |
+| Sepolia          | 11155111    | `sepolia`          |
+| Base Sepolia     | 84532       | `base-sepolia`     |
+| Arbitrum Sepolia | 421614      | `arbitrum-sepolia` |
+
+EVM chains use [viem](https://viem.sh)'s built-in transports for RPC communication. No custom RPC endpoint configuration is required -- viem provides default public transports for each supported chain.
+
+## Solana
+
+| Network  | Chain Key         | RPC Endpoint                          |
+| -------- | ----------------- | ------------------------------------- |
+| Devnet   | `solana-devnet`   | `https://api.devnet.solana.com`       |
+| Testnet  | `solana-testnet`  | `https://api.testnet.solana.com`      |
+| Mainnet  | `solana-mainnet`  | `https://api.mainnet-beta.solana.com` |
+
+Solana chains use the public RPC endpoints provided by the Solana Foundation.
+
+## Switching Networks
+
+Use the `wallet_switchNetwork` tool to change the active network. Pass the chain key as the argument:
+
+```json
+{
+  "tool": "wallet_switchNetwork",
+  "arguments": {
+    "network": "base-sepolia"
+  }
+}
+```
+
+The extension will switch its active chain and all subsequent tool calls will execute against the new network. You can verify the current network at any time with `wallet_getNetwork`.
+
+## EIP-1193 Provider
+
+The injected EIP-1193 provider in web pages (used by the Dashboard and dApps) respects the currently selected network. When the network is switched via a tool call, the provider emits a `chainChanged` event so connected dApps can update accordingly. The provider only supports the EVM testnets listed above.

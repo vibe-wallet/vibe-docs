@@ -1,0 +1,38 @@
+---
+title: "wallet_approveToken"
+description: "Approve a spender for ERC-20 tokens"
+icon: "check-double"
+---
+
+# wallet_approveToken
+
+Approve a spender address to transfer ERC-20 tokens on behalf of the active account. This is required before interacting with DeFi protocols that need to move your tokens.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `tokenAddress` | string | Yes | The ERC-20 token contract address (0x-prefixed) |
+| `spender` | string | Yes | The address to approve as a spender (0x-prefixed) |
+| `amount` | string | Yes | Amount to approve in human-readable units, or `"unlimited"` for max approval |
+| `decimals` | number | No | Token decimals for converting the amount |
+
+## Returns
+
+A transaction hash string.
+
+## Example
+
+```
+"Approve the Uniswap router to spend 1000 USDC"
+```
+
+```
+"Give unlimited approval for DAI to 0xDEF..."
+```
+
+## Notes
+
+- **Requires approval.** The user must confirm the transaction before it is broadcast.
+- Using `"unlimited"` sets the allowance to the maximum uint256 value. This is convenient but carries risk if the spender contract is compromised.
+- Always verify the spender address before approving.

@@ -1,0 +1,37 @@
+---
+title: "wallet_callContract"
+description: "Make a read-only smart contract call"
+icon: "file-contract"
+---
+
+# wallet_callContract
+
+Execute a read-only (view/pure) call against a smart contract. This does not create a transaction or modify any on-chain state.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `to` | string | Yes | The contract address (0x-prefixed) |
+| `data` | string | Yes | ABI-encoded function call data (hex-encoded) |
+
+## Returns
+
+A hex-encoded string containing the return data from the contract call.
+
+## Example
+
+```
+"Call the name() function on the USDC contract at 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+```
+
+```
+"Read the totalSupply from this token contract"
+```
+
+## Notes
+
+- No approval required since this is a read-only operation.
+- The `data` parameter must be ABI-encoded. For example, the selector for `totalSupply()` is `0x18160ddd`.
+- The return value is ABI-encoded and must be decoded to interpret the result.
+- This is an EVM-only tool.

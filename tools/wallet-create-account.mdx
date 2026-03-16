@@ -1,0 +1,36 @@
+---
+title: "wallet_createAccount"
+description: "Create a new EVM or Solana account"
+icon: "user-plus"
+---
+
+# wallet_createAccount
+
+Create a new account in the wallet. Supports both EVM and Solana account types.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | string | Yes | A unique name for the new account |
+| `type` | string | No | Account type: `"evm"` or `"solana"`. Defaults to `"evm"` |
+
+## Returns
+
+A confirmation string indicating the account was created.
+
+## Example
+
+```
+"Create a new EVM account called 'savings'"
+```
+
+```
+"Create a Solana account named 'sol-main'"
+```
+
+## Notes
+
+- Account names must be unique within the wallet instance.
+- No approval required.
+- The new account is not automatically selected as active. Use `wallet_selectAccount` to switch to it.

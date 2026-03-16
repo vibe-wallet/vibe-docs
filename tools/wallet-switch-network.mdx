@@ -1,0 +1,40 @@
+---
+title: "wallet_switchNetwork"
+description: "Switch to a different network"
+icon: "shuffle"
+---
+
+# wallet_switchNetwork
+
+Switch the wallet to a different blockchain network.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `chain` | string | Yes | Network identifier (e.g., `"sepolia"`, `"base-sepolia"`, `"solana-devnet"`) |
+
+## Returns
+
+A confirmation string indicating the network was switched.
+
+## Example
+
+```
+"Switch to Sepolia testnet"
+```
+
+```
+"Change network to base-sepolia"
+```
+
+```
+"Connect to solana-devnet"
+```
+
+## Notes
+
+- No approval required.
+- This affects all subsequent network-dependent operations.
+- Supported networks depend on the wallet configuration.
+- Works with both EVM and Solana networks.

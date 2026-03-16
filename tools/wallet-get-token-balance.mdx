@@ -1,0 +1,37 @@
+---
+title: "wallet_getTokenBalance"
+description: "Get the balance of an ERC-20 token"
+icon: "scale-balanced"
+---
+
+# wallet_getTokenBalance
+
+Get the balance of a specific ERC-20 token for the active account on the current network.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `tokenAddress` | string | Yes | The ERC-20 token contract address (0x-prefixed) |
+| `decimals` | number | No | Token decimals for formatting the balance |
+
+## Returns
+
+A string representing the token balance.
+
+## Example
+
+```
+"What's my USDC balance? The token address is 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+```
+
+```
+"Check my balance for token 0x6B175474E89094C44Da98b954EedeAC495271d0F"
+```
+
+## Notes
+
+- No approval required.
+- Requires the token's contract address on the current network.
+- If `decimals` is provided, the returned balance will be human-readable. Otherwise it may be a raw integer.
+- For native ETH balance, use `wallet_getBalance`.

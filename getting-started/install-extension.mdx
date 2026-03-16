@@ -1,0 +1,136 @@
+---
+title: 'Install Extension'
+description: 'Build and install the Vibe Wallet browser extension from source.'
+icon: 'puzzle-piece'
+---
+
+# Install the Browser Extension
+
+The Vibe Wallet browser extension is the on-device component that manages your private keys, signs transactions, and communicates with the MCP server over WebSocket. This guide covers building it from source and loading it into Chrome.
+
+## Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+| Requirement       | Version  | Notes                                      |
+|--------------------|----------|--------------------------------------------|
+| **Node.js**        | 18+      | Required for the build toolchain           |
+| **pnpm**           | 8+       | Package manager used by the monorepo       |
+| **Chrome/Chromium** | Latest   | Any Chromium-based browser (Chrome, Brave, Edge) |
+
+<Info>
+  If you don't have pnpm installed, you can install it with `npm install -g pnpm` or via [Corepack](https://pnpm.io/installation#using-corepack): `corepack enable && corepack prepare pnpm@latest --activate`.
+</Info>
+
+## Build from Source
+
+Clone the repository and build the extension:
+
+```bash
+# Clone the repository
+git clone https://github.com/anthropics/vibe-wallet.git
+cd vibe-wallet
+
+# Navigate to the extension directory
+cd mcp-wallet/extension
+
+# Install dependencies
+pnpm install
+
+# Build the extension
+pnpm build
+```
+
+After a successful build, the compiled extension will be in the `mcp-wallet/extension/dist/` directory.
+
+<Warning>
+  If the build fails, ensure you are using Node.js 18 or later. Run `node --version` to check your version.
+</Warning>
+
+## Load into Chrome
+
+<Steps>
+  <Step title="Open the Extensions Page">
+    Open Chrome and navigate to `chrome://extensions` in the address bar.
+  </Step>
+  <Step title="Enable Developer Mode">
+    In the top-right corner of the extensions page, toggle the **Developer mode** switch to the ON position.
+  </Step>
+  <Step title="Load Unpacked Extension">
+    Click the **Load unpacked** button that appears after enabling Developer mode.
+  </Step>
+  <Step title="Select the Build Output">
+    In the file picker, navigate to and select the `mcp-wallet/extension/dist/` directory. Do not select individual files — select the `dist` folder itself.
+  </Step>
+  <Step title="Verify Installation">
+    The Vibe Wallet extension should now appear in your extensions list with its icon. Click the puzzle-piece icon in the Chrome toolbar and pin it for quick access.
+  </Step>
+</Steps>
+
+## First Launch
+
+When you open the extension for the first time:
+
+1. **A default EVM account is created automatically.** This account is generated with a fresh private key stored locally in Chrome's extension storage.
+2. The extension will show your new wallet address and a zero ETH balance.
+3. The connection status indicator will appear **disconnected** until you configure the WebSocket connection.
+
+## Configure the WebSocket Connection
+
+The extension must connect to the Vibe Wallet MCP server to receive commands from your AI client.
+
+<Steps>
+  <Step title="Open Extension Settings">
+    Click the Vibe Wallet icon in the Chrome toolbar to open the popup, then click the **Settings** gear icon.
+  </Step>
+  <Step title="Configure Connection">
+    Click **Configure Connection**. You will see a WebSocket URL input field.
+  </Step>
+  <Step title="Enter the Server URL">
+    Set the URL to:
+    ```
+    wss://vibe-wallet-mcp.fly.dev/ws
+    ```
+  </Step>
+  <Step title="Save & Connect">
+    Click **Save & Connect**. The status indicator should turn green, confirming a live WebSocket connection to the MCP server.
+  </Step>
+</Steps>
+
+<Tip>
+  For local development, you can point the extension to a local server instead: `ws://localhost:3000/ws`. See the [Local Development](#local-development) section below.
+</Tip>
+
+## Local Development
+
+If you are running the MCP server locally, use the local WebSocket URL:
+
+```
+ws://localhost:3000/ws
+```
+
+To start the server locally:
+
+```bash
+cd mcp-wallet/server
+pnpm run dev
+```
+
+The local server will start on port 3000 by default.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Extension does not appear after loading">
+    Make sure you selected the `dist/` directory, not the `extension/` parent directory. If you still don't see it, check for build errors by running `pnpm build` again and reviewing the console output.
+  </Accordion>
+  <Accordion title="Connection status stays disconnected">
+    Verify the WebSocket URL is correct (`wss://vibe-wallet-mcp.fly.dev/ws`). Check that your network allows outbound WebSocket connections. Some corporate firewalls or proxies may block WSS traffic.
+  </Accordion>
+  <Accordion title="Build fails with Node.js errors">
+    Ensure you are running Node.js 18 or later. Run `node --version` to verify. If you use a version manager like `nvm`, run `nvm use 18` before building.
+  </Accordion>
+  <Accordion title="Extension shows 'Errors' badge in chrome://extensions">
+    Click **Errors** to see the details. Common causes include stale builds (rebuild with `pnpm build`) or missing permissions. Try removing and re-loading the extension.
+  </Accordion>
+</AccordionGroup>

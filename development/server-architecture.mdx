@@ -1,0 +1,44 @@
+---
+title: "Server Architecture"
+description: "Internal architecture of the Vibe Wallet MCP server."
+---
+
+## Overview
+
+The MCP server (`src/index.ts`, ~190 lines) bridges Claude (via SSE) to the Chrome extension (via WebSocket). It pairs connections by IP address and forwards MCP tool calls between them.
+
+## Core Data Structures
+
+The server maintains four in-memory data structures:
+
+| Structure | Type | Purpose |
+|-----------|------|---------|
+| `clients` | `Map<WebSocket, ClientInfo>` | Tracks connected Chrome extension instances with metadata |
+| `sseSessions` | `Map<string, SseSession>` | Active SSE sessions from MCP clients (Claude) |
+| `pairings` | `Map<string, WebSocket>` | Maps SSE session IDs to their paired WebSocket connection |
+| `pendingRequests` | `Map<string, PendingRequest>` | In-flight tool calls awaiting extension responses |
+
+## Connection Pairing
+
+Pairing happens by IP address and occurs at two points:
+
+1. **SSE connect** -- when an MCP client opens an SSE connection, the server records its IP
+2. **WebSocket identity message** -- when the extension connects and sends its identity, the server matches it to an SSE session with the same IP
+
+This IP-based pairing allows the server to route tool calls to the correct extension instance without requiring manual configuration.
+
+## Tool Routing
+
+Of the 27 MCP tools, two are handled directly by the server:
+
+| Tool | Behavior |
+|------|----------|
+| `wallet_listInstances` | Returns all connected extension instances |
+| `wallet_selectInstance` | Selects which extension to route subsequent calls to |
+
+The remaining **25 tools** are forwarded to the paired Chrome extension over WebSocket. The extension processes the request and sends the result back, which the server relays to the MCP client over SSE.
+
+## Timeouts and Heartbeats
+
+- **Request timeout**: 60 seconds. If the extension does not respond to a forwarded tool call within this window, the server returns an error to the MCP client.
+- **Heartbeat**: The server sends a WebSocket `ping` every 15 seconds. Connections that fail to respond with a `pong` are terminated as stale.

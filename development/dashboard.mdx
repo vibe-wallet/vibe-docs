@@ -1,0 +1,56 @@
+---
+title: "Dashboard"
+description: "Set up and develop the Vibe Wallet monitoring dashboard."
+---
+
+## Tech Stack
+
+- **Vite 7** for bundling
+- **React 19** + **TypeScript**
+- **Tailwind CSS 4** for styling
+- **viem** for reading on-chain data
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start dev server with hot reload |
+| `pnpm build` | Production build |
+
+## Development Workflow
+
+<Steps>
+  <Step title="Install dependencies">
+    ```bash
+    cd dashboard
+    pnpm install
+    ```
+  </Step>
+  <Step title="Start the dev server">
+    ```bash
+    pnpm dev
+    ```
+  </Step>
+  <Step title="Connect the extension">
+    Open the dashboard in Chrome with the Vibe Wallet extension installed. The dashboard connects to the extension via the injected `window.ethereum` provider.
+  </Step>
+</Steps>
+
+## How It Works
+
+The dashboard reads wallet state through the EIP-1193 provider that the Vibe Wallet extension injects into every page as `window.ethereum`. No separate API or WebSocket connection is needed.
+
+## Features
+
+- **Real-time balance** -- displays the current balance for the active account and network
+- **Multi-account view** -- shows all accounts managed by the extension
+- **Transaction history** -- lists recent transactions for the selected account
+- **Network switching** -- switch between EVM chains directly from the dashboard
+
+## Deployment
+
+The dashboard is deployed on Netlify and live at:
+
+```
+https://vibe-dashboard.netlify.app
+```

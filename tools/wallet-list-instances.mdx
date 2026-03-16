@@ -1,0 +1,40 @@
+---
+title: "wallet_listInstances"
+description: "List all connected wallet instances"
+icon: "list"
+---
+
+# wallet_listInstances
+
+List all connected Vibe Wallet instances. Use this to discover available wallets before selecting one to control.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+An array of wallet instance objects:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique instance identifier |
+| `name` | string | Human-readable instance name |
+| `activeAccount` | string | Currently active account name |
+| `isActive` | boolean | Whether this instance is currently selected |
+
+## Example
+
+```
+"List all connected wallets"
+```
+
+```
+"Show me which wallet instances are available"
+```
+
+## Notes
+
+- This is typically the first tool to call when starting a session.
+- No approval required.
+- Works with both EVM and Solana account types.

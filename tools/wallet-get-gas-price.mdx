@@ -1,0 +1,34 @@
+---
+title: "wallet_getGasPrice"
+description: "Get the current gas price"
+icon: "gas-pump"
+---
+
+# wallet_getGasPrice
+
+Get the current gas price on the connected EVM network.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+A hex-encoded string representing the gas price in wei (e.g., `"0x3B9ACA00"` for 1 Gwei).
+
+## Example
+
+```
+"What's the current gas price?"
+```
+
+```
+"How much is gas right now?"
+```
+
+## Notes
+
+- No approval required.
+- The result is in wei (hex-encoded). Divide by 10^9 to get Gwei.
+- Gas prices fluctuate based on network demand.
+- This is an EVM-only tool.

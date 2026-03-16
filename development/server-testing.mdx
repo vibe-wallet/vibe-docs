@@ -1,0 +1,71 @@
+---
+title: "Server Testing"
+description: "End-to-end testing strategy for the Vibe Wallet MCP server."
+---
+
+## Framework
+
+The server uses **Vitest** for end-to-end testing. Tests exercise the full request path: MCP client to server to extension and back.
+
+## Running Tests
+
+```bash
+# Run all tests (typically <2s)
+pnpm test
+
+# Watch mode for development
+pnpm test:watch
+```
+
+## Test Architecture
+
+The E2E tests simulate the complete system:
+
+```
+Vitest --> MCP Client (SSE) --> Local Server --> WebSocket --> Mock Extension
+```
+
+<Steps>
+  <Step title="Server starts">
+    The test setup (`setup.ts`) starts the MCP server on a random available port.
+  </Step>
+  <Step title="Mock extension connects">
+    A mock extension (`mock-extension.ts`) connects via WebSocket and sends an identity message.
+  </Step>
+  <Step title="MCP client connects">
+    An MCP SSE client connects to the server, establishing the full pipeline.
+  </Step>
+  <Step title="Tests execute tools">
+    Each test calls an MCP tool through the client and asserts on the response.
+  </Step>
+</Steps>
+
+## Test Suite
+
+**44 E2E tests** covering all 27 MCP tools, organized across five test files:
+
+| Test File | Coverage |
+|-----------|----------|
+| `read-tools.test.ts` | Read-only tools: balance, address, network, gas price, block number, status, transaction history |
+| `account-tools.test.ts` | Account management: create, import, list, select, delete |
+| `evm-write-tools.test.ts` | EVM write operations: send transaction, send token, approve token, call contract, sign message, switch network |
+| `solana-tools.test.ts` | Solana operations: get address, get balance, send transaction, sign message, get airdrop |
+| `error-cases.test.ts` | Error handling: invalid parameters, timeouts, disconnected extensions |
+
+## Mock Extension
+
+The file `mock-extension.ts` simulates a Chrome extension instance. It:
+
+- Connects to the server via WebSocket
+- Sends an identity message on connect
+- Responds to all 27 tool methods with **deterministic data**, making assertions predictable
+- Handles the same message format as the real extension
+
+## Test Setup
+
+The file `setup.ts` orchestrates the test environment:
+
+1. Starts the server on a random port (avoids conflicts in CI)
+2. Connects the mock extension via WebSocket
+3. Creates an MCP SSE client pointed at the local server
+4. Tears everything down after tests complete

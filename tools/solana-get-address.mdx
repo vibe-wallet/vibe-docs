@@ -1,0 +1,33 @@
+---
+title: "solana_getAddress"
+description: "Get the active Solana address"
+icon: "at"
+---
+
+# solana_getAddress
+
+Get the public address of the currently active Solana account.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+A base58-encoded Solana public key string (e.g., `"7EcDhSYGxXyscszYEp35KHN8vvw3svAuLKTzXwCFLtV"`).
+
+## Example
+
+```
+"What's my Solana address?"
+```
+
+```
+"Show me my SOL wallet address"
+```
+
+## Notes
+
+- Requires an active Solana account. Use `wallet_selectAccount` to switch if needed.
+- No approval required.
+- For EVM addresses, use `wallet_getAddress` instead.

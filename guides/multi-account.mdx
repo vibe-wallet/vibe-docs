@@ -1,0 +1,101 @@
+---
+title: "Managing Multiple Accounts"
+description: "Create, import, switch, and manage multiple EVM and Solana accounts in Vibe Wallet"
+---
+
+## Overview
+
+Vibe Wallet supports multiple accounts within a single instance. Each account has its own keypair, address, and type (EVM or Solana). You can switch between accounts at any time.
+
+## List Accounts
+
+View all accounts in your wallet:
+
+```
+List my wallet accounts
+```
+
+This calls `wallet_listAccounts` and returns every account with its name, address, and type.
+
+## Create an EVM Account
+
+```
+Create a new EVM account called "trading"
+```
+
+Calls `wallet_createAccount` with:
+- **name**: `"trading"`
+- **type**: `"evm"`
+
+A new Ethereum-compatible keypair is generated and stored locally in the extension.
+
+## Create a Solana Account
+
+```
+Create a new Solana account called "sol-main"
+```
+
+Calls `wallet_createAccount` with:
+- **name**: `"sol-main"`
+- **type**: `"solana"`
+
+A new Solana keypair is generated and stored locally in the extension.
+
+## Import an Existing Account
+
+If you already have a private key, you can import it:
+
+```
+Import my account with private key 0x... and name it "imported-wallet"
+```
+
+Calls `wallet_importAccount` with:
+- **name**: `"imported-wallet"`
+- **privateKey**: your private key
+- **type**: `"evm"` or `"solana"`
+
+<Warning>
+Your private key is stored locally in the browser extension. Never share it or paste it into untrusted contexts.
+</Warning>
+
+## Switch Accounts
+
+Change the active account:
+
+```
+Switch to account "trading"
+```
+
+Calls `wallet_selectAccount` with:
+- **accountName**: `"trading"`
+
+All subsequent operations (balance checks, transactions, signing) use the selected account.
+
+## Delete an Account
+
+Remove an account from the wallet:
+
+```
+Delete account "old-wallet"
+```
+
+Calls `wallet_deleteAccount` with:
+- **accountName**: `"old-wallet"`
+
+<Warning>
+Deleting an account removes its keypair from the extension permanently. Make sure you have backed up the private key if you need it later.
+</Warning>
+
+## Validation Rules
+
+Vibe Wallet enforces the following rules when managing accounts:
+
+| Rule | Behavior |
+|---|---|
+| Duplicate account names | Rejected with an error |
+| Empty account name | Rejected with an error |
+| Missing type on creation | Defaults to EVM |
+
+## Legacy Accounts
+
+Accounts created before multi-chain support was introduced may not have an explicit type. These legacy accounts are treated as **EVM** accounts by default. They work normally with all EVM tools (`wallet_getBalance`, `wallet_sendTransaction`, etc.) but cannot be used with Solana-specific tools.

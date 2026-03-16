@@ -1,0 +1,64 @@
+---
+title: "Data Flow"
+description: "How a tool call travels from AI agent through the MCP Server and Chrome Extension to the blockchain and back"
+---
+
+# Data Flow
+
+Every tool call in Vibe Wallet follows a consistent request-response cycle across three boundaries: AI agent to MCP Server (SSE), MCP Server to Chrome Extension (WebSocket), and Chrome Extension to blockchain (RPC).
+
+## Request Path
+
+### 1. AI agent sends a tool call
+
+The AI agent issues a tool call over the MCP SSE transport. The request arrives as an HTTP POST to the server's SSE session endpoint, containing the tool name and its arguments.
+
+### 2. Server looks up the paired extension
+
+The server uses the **pairings** Map to find the WebSocket connection associated with the calling SSE session. If no pairing exists, the server returns an error indicating that no extension is connected.
+
+### 3. Server forwards via WebSocket
+
+The server generates a unique **request ID**, wraps the tool call in a WebSocket message, and sends it to the paired Chrome Extension. It then creates a pending promise keyed by that request ID and awaits the response.
+
+### 4. Extension executes the operation
+
+The extension's background service worker receives the message and dispatches it to the appropriate handler based on the tool name. Depending on the tool, the extension may:
+
+- Query balances or block data via viem (EVM) or @solana/web3.js (Solana)
+- Construct and sign a transaction using locally stored private keys
+- Call a smart contract function
+- Look up token balances or transaction history
+
+### 5. Extension sends the response
+
+Once the operation completes, the extension sends the result back over WebSocket using the same request ID.
+
+### 6. Server resolves and responds via SSE
+
+The server matches the incoming WebSocket message to the pending promise by request ID, resolves it, and sends the MCP tool response back to the AI agent over the SSE connection.
+
+## User Approval Flow
+
+For sensitive operations (sending transactions, signing messages, approving tokens), the extension can require explicit user approval:
+
+1. The background service worker opens a popup window showing the operation details -- recipient, amount, network, gas estimate.
+2. The user reviews and either **approves** or **rejects** the request.
+3. If approved, the extension proceeds with execution and returns the result.
+4. If rejected, the extension returns a rejection error to the server.
+
+**YOLO mode**: Users can enable YOLO mode in the extension settings to skip approval popups and auto-approve all operations. This is intended for development and testnet usage only.
+
+## Error Scenarios
+
+### Timeout
+
+If the extension does not respond within **60 seconds**, the server rejects the pending promise with a timeout error. The AI agent receives an error response indicating the operation timed out.
+
+### Extension disconnect
+
+If the WebSocket connection drops while a request is pending, all outstanding promises for that connection are rejected. The AI agent receives an error indicating the extension disconnected.
+
+### User rejection
+
+If the user rejects an operation in the approval popup, the extension sends an explicit rejection response. The AI agent receives an error indicating the user declined the operation.

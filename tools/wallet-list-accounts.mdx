@@ -1,0 +1,38 @@
+---
+title: "wallet_listAccounts"
+description: "List all accounts in the wallet"
+icon: "address-book"
+---
+
+# wallet_listAccounts
+
+List all accounts managed by the active wallet instance, including both EVM and Solana accounts.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+An array of account objects:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `name` | string | Account name |
+| `address` | string | Account address (0x for EVM, base58 for Solana) |
+| `type` | string | Account type (`"evm"` or `"solana"`) |
+
+## Example
+
+```
+"Show me all my accounts"
+```
+
+```
+"List my wallet accounts"
+```
+
+## Notes
+
+- No approval required.
+- Returns both EVM and Solana accounts.

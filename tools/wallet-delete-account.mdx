@@ -1,0 +1,35 @@
+---
+title: "wallet_deleteAccount"
+description: "Delete an account by name"
+icon: "user-minus"
+---
+
+# wallet_deleteAccount
+
+Delete an account from the wallet by its name. This action is irreversible.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `accountName` | string | Yes | The name of the account to delete |
+
+## Returns
+
+A confirmation string indicating the account was deleted.
+
+## Example
+
+```
+"Delete my account called 'old-test'"
+```
+
+```
+"Remove the 'temp' account"
+```
+
+## Notes
+
+- This action is irreversible. Make sure to back up the private key before deleting if needed.
+- You cannot delete the currently active account. Switch to a different account first.
+- No approval required.

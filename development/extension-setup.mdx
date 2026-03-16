@@ -1,0 +1,59 @@
+---
+title: "Extension Setup"
+description: "Set up the Vibe Wallet Chrome extension for local development."
+---
+
+## Tech Stack
+
+- **Vite** with **CRXJS** plugin for Chrome extension bundling
+- **React 19** + **TypeScript**
+- **Tailwind CSS** for styling
+- **viem** for EVM interactions
+- **@solana/web3.js** for Solana interactions
+- **bip39** for mnemonic generation
+- **tweetnacl** for Solana keypair derivation
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start dev server with hot reload |
+| `pnpm build` | Production build |
+| `pnpm lint` | Run linter |
+| `pnpm test` | Run unit tests |
+
+## Development Workflow
+
+<Steps>
+  <Step title="Install dependencies">
+    ```bash
+    cd extension
+    pnpm install
+    ```
+  </Step>
+  <Step title="Start dev server">
+    ```bash
+    pnpm dev
+    ```
+    This starts Vite with CRXJS, which outputs a `dist/` directory with hot-reload support.
+  </Step>
+  <Step title="Load in Chrome">
+    1. Open `chrome://extensions`
+    2. Enable **Developer mode** (top-right toggle)
+    3. Click **Load unpacked**
+    4. Select the `extension/dist` directory
+  </Step>
+  <Step title="Develop">
+    Changes to source files trigger hot reload automatically. The extension popup and background script update without needing to re-load the extension in most cases.
+  </Step>
+</Steps>
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `background/index.ts` | Main handler for all 27 MCP tools |
+| `App.tsx` | Popup UI with account switcher, network selector, and confirmation dialogs |
+| `src/lib/` | Pure functions for encoding, parsing, chain helpers, and account logic |
+
+See [Extension Architecture](/development/extension-architecture) for a detailed breakdown of internals.

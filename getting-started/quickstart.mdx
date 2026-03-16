@@ -1,0 +1,166 @@
+---
+title: 'Quickstart'
+description: 'Get Vibe Wallet running in under 5 minutes with your AI client and browser extension.'
+icon: 'rocket'
+---
+
+# Quickstart
+
+This guide walks you through connecting Vibe Wallet to your AI client and browser extension so you can start managing crypto with natural language.
+
+## Prerequisites
+
+- An AI client that supports MCP (Claude Desktop, Claude Code, or OpenCode)
+- Google Chrome or a Chromium-based browser
+- Node.js 18+ and pnpm (for building the extension)
+
+---
+
+## Step 1: Configure Your AI Client
+
+Add the Vibe Wallet MCP server to your AI client configuration.
+
+<Tabs>
+  <Tab title="Claude Desktop">
+    Edit your `claude_desktop_config.json` file:
+
+    ```json
+    {
+      "mcpServers": {
+        "vibe-wallet": {
+          "url": "https://vibe-wallet-mcp.fly.dev/sse"
+        }
+      }
+    }
+    ```
+
+    Claude Desktop supports SSE transports natively, so you connect directly to the server URL.
+
+    <Info>
+      On macOS, this file is located at `~/Library/Application Support/Claude/claude_desktop_config.json`.
+      On Windows, it is at `%APPDATA%\Claude\claude_desktop_config.json`.
+    </Info>
+  </Tab>
+  <Tab title="Claude Code">
+    Claude Code uses `mcp-remote` as a stdio-to-SSE bridge. Add this to your project's `.mcp.json` or global MCP config:
+
+    ```json
+    {
+      "mcpServers": {
+        "vibe-wallet": {
+          "command": "npx",
+          "args": ["-y", "mcp-remote", "https://vibe-wallet-mcp.fly.dev/sse"]
+        }
+      }
+    }
+    ```
+
+    The `mcp-remote` package is fetched automatically by `npx` on first use.
+  </Tab>
+</Tabs>
+
+After saving your configuration, restart your AI client to pick up the new MCP server.
+
+---
+
+## Step 2: Install the Browser Extension
+
+Build and install the Vibe Wallet Chrome extension from source.
+
+```bash
+# Clone the repository (if you haven't already)
+git clone https://github.com/anthropics/vibe-wallet.git
+cd vibe-wallet
+
+# Install dependencies and build the extension
+cd mcp-wallet/extension
+pnpm install
+pnpm build
+```
+
+Then load it into Chrome:
+
+<Steps>
+  <Step title="Open Chrome Extensions">
+    Navigate to `chrome://extensions` in your browser.
+  </Step>
+  <Step title="Enable Developer Mode">
+    Toggle the **Developer mode** switch in the top-right corner.
+  </Step>
+  <Step title="Load Unpacked">
+    Click **Load unpacked** and select the `mcp-wallet/extension/dist` directory.
+  </Step>
+  <Step title="Pin the Extension">
+    Click the puzzle icon in the Chrome toolbar and pin Vibe Wallet for easy access.
+  </Step>
+</Steps>
+
+On first launch, the extension automatically creates a default EVM account for you.
+
+---
+
+## Step 3: Configure the Connection
+
+Connect your browser extension to the cloud MCP server.
+
+<Steps>
+  <Step title="Open Extension Settings">
+    Click the Vibe Wallet extension icon, then navigate to **Settings**.
+  </Step>
+  <Step title="Configure Connection">
+    Click **Configure Connection** and set the WebSocket URL to:
+    ```
+    wss://vibe-wallet-mcp.fly.dev/ws
+    ```
+  </Step>
+  <Step title="Save & Connect">
+    Click **Save & Connect**. The extension status indicator should turn green, confirming a live connection to the server.
+  </Step>
+</Steps>
+
+<Tip>
+  Smart IP Pairing handles session isolation automatically. As long as your AI client and browser are on the same network (same public IP), they will be paired without any additional configuration.
+</Tip>
+
+---
+
+## Step 4: Test the Connection
+
+Open your AI client and try these commands:
+
+```
+"What is my wallet address?"
+```
+
+The AI should return your active Ethereum wallet address (e.g., `0x1234...abcd`).
+
+```
+"Check my ETH balance"
+```
+
+The AI will query your balance on the current network.
+
+```
+"List my wallet instances"
+```
+
+You should see your current device listed as **Active**, confirming the AI client and extension are properly paired.
+
+---
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Install Extension" icon="puzzle-piece" href="/getting-started/install-extension">
+    Detailed extension setup, troubleshooting, and configuration options.
+  </Card>
+  <Card title="Configure AI Client" icon="robot" href="/getting-started/configure-ai">
+    Advanced configuration for Claude Desktop, Claude Code, and OpenCode.
+  </Card>
+  <Card title="Security Modes" icon="shield-halved" href="/getting-started/security-modes">
+    Understand Confirmation Mode vs YOLO Mode and which tools require approval.
+  </Card>
+  <Card title="MCP Tools Reference" icon="book" href="/tools-reference">
+    Full reference for all 27 MCP tools available to your AI agent.
+  </Card>
+</CardGroup>

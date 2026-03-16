@@ -1,0 +1,66 @@
+---
+title: "Extension Testing"
+description: "Unit testing strategy and coverage for the Vibe Wallet Chrome extension."
+---
+
+## Framework
+
+The extension uses **Vitest** for unit testing. All tests target the pure functions extracted into `src/lib/`, keeping tests fast and free of browser API dependencies.
+
+## Running Tests
+
+```bash
+# Run all tests (typically <400ms)
+pnpm test
+
+# Watch mode for development
+pnpm test:watch
+```
+
+## Test Suite
+
+**76 unit tests** across four test files covering all extracted pure functions:
+
+| Test File | Module Under Test | Coverage |
+|-----------|-------------------|----------|
+| `encoding.test.ts` | `src/lib/encoding.ts` | ERC-20 transfer/approve calldata encoding |
+| `message-parsing.test.ts` | `src/lib/message-parsing.ts` | `personal_sign` parameter detection |
+| `chain-helpers.test.ts` | `src/lib/chain-helpers.ts` | Chain ID formatting, network names |
+| `accounts.test.ts` | `src/lib/accounts.ts` | Account type detection, legacy accounts |
+
+## What the Tests Verify
+
+<AccordionGroup>
+  <Accordion title="ERC-20 Encoding">
+    - Encoded `transfer` and `approve` calldata matches viem reference output
+    - Correct handling of various decimal precisions (6, 8, 18)
+    - Unlimited approval encoding (`type(uint256).max`)
+  </Accordion>
+  <Accordion title="Address Normalization">
+    - Addresses without `0x` prefix are handled correctly
+    - The 42-character hex boundary (with `0x`) is validated
+  </Accordion>
+  <Accordion title="Chain ID Formatting">
+    - Hex-to-decimal and decimal-to-hex conversion
+    - Human-readable network name resolution
+    - RPC URL mapping for supported chains
+  </Accordion>
+  <Accordion title="Account Type Detection">
+    - Legacy account format identification
+    - EVM vs Solana account distinction
+    - Validation of account metadata
+  </Accordion>
+  <Accordion title="Personal Sign Parsing">
+    - `parsePersonalSignParams` handles both param orders (message-first and address-first)
+    - Correct detection of which parameter is the address and which is the message
+  </Accordion>
+</AccordionGroup>
+
+## Edge Cases
+
+The test suite explicitly covers several tricky edge cases:
+
+- Address strings without the `0x` prefix
+- Unlimited token approval values
+- The 42-character hex boundary for Ethereum addresses
+- Ambiguous `parsePersonalSignParams` parameter ordering

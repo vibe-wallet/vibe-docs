@@ -1,0 +1,40 @@
+---
+title: "Smart IP Pairing"
+description: "How Vibe Wallet pairs AI agents to Chrome Extensions automatically using IP addresses"
+---
+
+# Smart IP Pairing
+
+Vibe Wallet uses smart IP pairing to connect AI agents to Chrome Extension instances with zero configuration. There are no API keys to generate, no accounts to register, and no tokens to copy-paste. If the AI agent and the extension are on the same network, they find each other automatically.
+
+## How It Works
+
+1. A Chrome Extension connects to the MCP Server over WebSocket. The server extracts the client's public IP address and stores the connection in the **clients** Map.
+2. An AI agent connects to the MCP Server over SSE. The server extracts the client's public IP address and stores the session in the **sseSessions** Map.
+3. The server checks whether a WebSocket connection exists from the same IP. If so, it creates an entry in the **pairings** Map linking the SSE session ID to the WebSocket connection.
+4. All subsequent tool calls from that SSE session are forwarded to the paired WebSocket connection.
+
+Because both the AI agent (running on the user's machine via Claude Code, for example) and the Chrome Extension (running in the user's browser) share the same public IP, the pairing happens instantly and transparently.
+
+## Data Structures
+
+The server maintains three core maps:
+
+- **clients** `Map<string, WebSocket>` -- Keyed by a connection identifier, stores active WebSocket connections from Chrome Extensions along with their source IP.
+- **sseSessions** `Map<string, SseSession>` -- Keyed by session ID, stores active SSE connections from AI agents along with their source IP.
+- **pairings** `Map<string, string>` -- Maps an SSE session ID to a WebSocket client ID, establishing which extension handles requests for which AI agent.
+
+## Multiple Instances
+
+If multiple Chrome Extension instances connect from the same IP address (for example, multiple browser profiles or machines behind the same NAT), the server cannot automatically determine which one to pair. In this case:
+
+- Use `wallet_listInstances` to see all connected extension instances from your IP.
+- Use `wallet_selectInstance` to explicitly choose which instance the AI agent should be paired with.
+
+This keeps the default experience zero-config while supporting advanced multi-instance setups.
+
+## Heartbeat and Timeouts
+
+- **Heartbeat**: The server sends a WebSocket ping every **15 seconds**. If an extension fails to respond, the connection is considered stale and terminated. The corresponding pairing is removed.
+- **Response timeout**: When a tool call is forwarded to an extension, the server waits up to **60 seconds** for a response. If the extension does not respond in time, the server returns a timeout error to the AI agent.
+- **Disconnection cleanup**: When either the SSE session or WebSocket connection closes, the server cleans up the relevant entries in all three maps.

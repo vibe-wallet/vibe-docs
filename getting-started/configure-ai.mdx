@@ -1,0 +1,176 @@
+---
+title: 'Configure AI Client'
+description: 'Connect your AI client to the Vibe Wallet MCP server across different platforms.'
+icon: 'robot'
+---
+
+# Configure Your AI Client
+
+Vibe Wallet exposes its functionality through an MCP server deployed at `https://vibe-wallet-mcp.fly.dev`. Your AI client connects to this server and gains access to all 27 wallet tools. This guide covers configuration for each supported platform.
+
+## Connection Overview
+
+The MCP server supports the **SSE (Server-Sent Events)** transport at the `/sse` endpoint. Depending on your AI client, you either connect directly via SSE or use an stdio bridge.
+
+| Client          | Transport     | Bridge Required |
+|-----------------|---------------|-----------------|
+| Claude Desktop  | SSE (native)  | No              |
+| Claude Code     | stdio via mcp-remote | Yes      |
+| OpenCode        | SSE (native)  | No              |
+
+---
+
+## Claude Desktop
+
+Claude Desktop supports SSE transports natively. Add the following to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "vibe-wallet": {
+      "url": "https://vibe-wallet-mcp.fly.dev/sse"
+    }
+  }
+}
+```
+
+### Config File Location
+
+<Tabs>
+  <Tab title="macOS">
+    ```
+    ~/Library/Application Support/Claude/claude_desktop_config.json
+    ```
+  </Tab>
+  <Tab title="Windows">
+    ```
+    %APPDATA%\Claude\claude_desktop_config.json
+    ```
+  </Tab>
+  <Tab title="Linux">
+    ```
+    ~/.config/Claude/claude_desktop_config.json
+    ```
+  </Tab>
+</Tabs>
+
+After saving the file, **restart Claude Desktop** to load the new MCP server configuration. You should see "vibe-wallet" listed in Claude's MCP tools panel.
+
+---
+
+## Claude Code
+
+Claude Code uses stdio-based MCP transports. To bridge from stdio to the SSE endpoint, Vibe Wallet uses the `mcp-remote` package.
+
+Add this configuration to your project's `.mcp.json` file (at the root of your project):
+
+```json
+{
+  "mcpServers": {
+    "vibe-wallet": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://vibe-wallet-mcp.fly.dev/sse"]
+    }
+  }
+}
+```
+
+### How It Works
+
+1. Claude Code launches `npx -y mcp-remote https://vibe-wallet-mcp.fly.dev/sse` as a child process.
+2. `mcp-remote` connects to the SSE endpoint and bridges MCP messages between Claude Code's stdio and the remote server.
+3. The `-y` flag auto-confirms the npx install prompt, so no manual intervention is needed.
+
+<Info>
+  The `mcp-remote` package is downloaded and cached automatically by npx on first use. Subsequent launches are near-instant.
+</Info>
+
+---
+
+## OpenCode
+
+OpenCode supports SSE transports similarly to Claude Desktop. Add the Vibe Wallet server to your OpenCode MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "vibe-wallet": {
+      "url": "https://vibe-wallet-mcp.fly.dev/sse"
+    }
+  }
+}
+```
+
+Refer to OpenCode's documentation for the specific location of its MCP configuration file.
+
+---
+
+## Verifying the Connection
+
+After configuring your AI client, verify the connection is working by asking your AI agent:
+
+<Steps>
+  <Step title="Check Wallet Address">
+    Ask: **"What is my wallet address?"**
+
+    The AI should invoke the `wallet_getAddress` tool and return an Ethereum address like `0x1234...abcd`.
+  </Step>
+  <Step title="Check Balance">
+    Ask: **"Check my ETH balance"**
+
+    The AI should invoke `wallet_getBalance` and return your balance on the current network.
+  </Step>
+  <Step title="List Instances">
+    Ask: **"List my wallet instances"**
+
+    The AI should invoke `wallet_listInstances` and show your browser extension as an active device. This confirms the AI client and extension are paired via Smart IP Pairing.
+  </Step>
+</Steps>
+
+<Warning>
+  If the AI reports that no wallet is connected or the tool calls fail, make sure:
+  1. The browser extension is installed and connected (green status indicator).
+  2. Your AI client and browser are on the **same network** (same public IP) for Smart IP Pairing to work.
+  3. You restarted your AI client after updating the configuration.
+</Warning>
+
+---
+
+## Smart IP Pairing
+
+Vibe Wallet uses **Smart IP Pairing** for zero-config session isolation. Here is how it works:
+
+1. When your AI client connects to the MCP server via SSE, the server records its public IP address.
+2. When your browser extension connects via WebSocket, the server records its public IP address.
+3. Connections from the same IP are automatically paired into the same session.
+
+This means there is nothing to configure. As long as your AI client and browser run on the same machine or behind the same NAT, they are automatically linked.
+
+<Tip>
+  If you are running the AI client on a remote machine (e.g., a cloud VM), it will have a different public IP than your browser. In that case, both the AI and the extension need to connect from the same network for pairing to work.
+</Tip>
+
+---
+
+## Local Development Server
+
+For local development, you can run the MCP server on your own machine:
+
+```bash
+cd mcp-wallet/server
+pnpm run dev
+```
+
+Then update your AI client configuration to point to the local server:
+
+```json
+{
+  "mcpServers": {
+    "vibe-wallet": {
+      "url": "http://localhost:3000/sse"
+    }
+  }
+}
+```
+
+And update the browser extension's WebSocket URL to `ws://localhost:3000/ws`.

@@ -1,0 +1,33 @@
+---
+title: "solana_getAirdrop"
+description: "Request a devnet SOL airdrop"
+icon: "parachute-box"
+---
+
+# solana_getAirdrop
+
+Request a free SOL airdrop on Solana devnet. Useful for testing and development.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+A transaction signature string confirming the airdrop.
+
+## Example
+
+```
+"Airdrop some SOL to my account"
+```
+
+```
+"Get me some devnet SOL"
+```
+
+## Notes
+
+- Only works on Solana devnet. Make sure you are connected to `solana-devnet` via `wallet_switchNetwork`.
+- No approval required.
+- Devnet airdrops are rate-limited. If the request fails, wait a moment and try again.

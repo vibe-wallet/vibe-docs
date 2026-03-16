@@ -1,0 +1,35 @@
+---
+title: "wallet_signMessage"
+description: "Sign a message with the active EVM account"
+icon: "signature"
+---
+
+# wallet_signMessage
+
+Sign an arbitrary message with the active EVM account's private key. Commonly used for authentication and off-chain verification.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `message` | string | Yes | The message to sign |
+
+## Returns
+
+A hex-encoded signature string.
+
+## Example
+
+```
+"Sign the message 'Hello, World!'"
+```
+
+```
+"Sign this login challenge: 'Authenticate user session 12345'"
+```
+
+## Notes
+
+- **Requires approval.** The user must confirm the signing operation.
+- Uses EIP-191 personal message signing.
+- For Solana message signing, use `solana_signMessage`.

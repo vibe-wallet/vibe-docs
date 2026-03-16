@@ -1,0 +1,39 @@
+---
+title: "wallet_sendTransaction"
+description: "Send ETH to an address"
+icon: "paper-plane"
+---
+
+# wallet_sendTransaction
+
+Send native ETH (or the network's native token) to a specified address. This is a state-changing operation that requires user approval.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `to` | string | Yes | The recipient address (0x-prefixed) |
+| `value` | string | No | Amount to send in wei (hex-encoded) |
+| `data` | string | No | Encoded calldata for contract interactions (hex-encoded) |
+
+## Returns
+
+A transaction hash string (e.g., `"0x123...abc"`).
+
+## Example
+
+```
+"Send 0.1 ETH to 0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"
+```
+
+```
+"Transfer 1 ETH to vitalik.eth"
+```
+
+## Notes
+
+- **Requires approval.** The user must confirm the transaction before it is broadcast.
+- The `value` parameter is in wei (hex-encoded). For example, 1 ETH = `"0xDE0B6B3A7640000"`.
+- Use `wallet_estimateGas` to preview gas costs before sending.
+- For sending ERC-20 tokens, use `wallet_sendToken` instead.
+- For Solana transactions, use `solana_sendTransaction`.

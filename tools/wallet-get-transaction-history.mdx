@@ -1,0 +1,34 @@
+---
+title: "wallet_getTransactionHistory"
+description: "Get recent transactions for the active account"
+icon: "clock-rotate-left"
+---
+
+# wallet_getTransactionHistory
+
+Get the recent transaction history for the currently active account on the current network.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+An array of transaction objects containing details such as hash, from, to, value, and status.
+
+## Example
+
+```
+"Show my recent transactions"
+```
+
+```
+"What transactions have I made?"
+```
+
+## Notes
+
+- No approval required.
+- Returns transactions for the currently active account and network only.
+- The number of transactions returned depends on the wallet's internal history tracking.
+- This is an EVM-only tool.

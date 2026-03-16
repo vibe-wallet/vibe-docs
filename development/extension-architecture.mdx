@@ -1,0 +1,60 @@
+---
+title: "Extension Architecture"
+description: "Internal architecture of the Vibe Wallet Chrome extension."
+---
+
+## Background Script
+
+The file `background/index.ts` (~800 lines) is the core of the extension. It handles all 27 MCP tools via a single `switch` statement, processing requests received over a WebSocket connection to the MCP server.
+
+Key responsibilities:
+
+- Account creation, import, selection, and deletion
+- EVM transactions (send ETH, send tokens, approve tokens, call contracts)
+- Solana transactions (send SOL, sign messages, request airdrops)
+- Balance queries, gas estimation, network switching
+- Message signing (EVM `personal_sign`)
+
+### WebSocket Connection
+
+The background script maintains a persistent WebSocket connection to the MCP server. On connect, it sends an **identity message** so the server can pair it with the correct SSE session.
+
+### YOLO Mode
+
+When enabled, YOLO mode auto-approves sensitive requests (transactions, signing) that come from MCP tool calls. Requests originating from DApp interactions through the injected provider are never auto-approved regardless of YOLO mode.
+
+## Popup UI
+
+`App.tsx` renders the extension popup and provides:
+
+- **Account switcher** -- select between created/imported accounts
+- **Network selector** -- switch between EVM chains and Solana
+- **Confirmation dialogs** -- approve or reject transactions and signing requests
+
+## Pure Function Libraries
+
+All business logic that does not depend on browser APIs is extracted into `src/lib/` for testability.
+
+<AccordionGroup>
+  <Accordion title="encoding.ts">
+    ERC-20 `transfer` and `approve` calldata encoding using viem's `parseUnits`. Builds the full ABI-encoded function call for token operations.
+  </Accordion>
+  <Accordion title="message-parsing.ts">
+    Detects and normalizes `personal_sign` parameters. Handles the ambiguous param order where the message and address can appear in either position.
+  </Accordion>
+  <Accordion title="chain-helpers.ts">
+    Chain ID formatting (hex/decimal conversion), human-readable network names, and RPC URL resolution for supported networks.
+  </Accordion>
+  <Accordion title="accounts.ts">
+    Account type detection and validation. Identifies legacy account formats and distinguishes between EVM and Solana accounts.
+  </Accordion>
+</AccordionGroup>
+
+## EIP-1193 Provider Injection
+
+Two files work together to inject a standard Ethereum provider into web pages:
+
+1. **`content/index.ts`** -- content script that relays messages between the injected page script and the extension background
+2. **`public/inpage.js`** -- injected into the page context, exposes `window.ethereum` as an EIP-1193-compatible provider
+
+This allows DApps to interact with Vibe Wallet using the standard `window.ethereum` API, just like MetaMask.

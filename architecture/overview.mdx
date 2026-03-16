@@ -1,0 +1,42 @@
+---
+title: "Architecture Overview"
+description: "High-level architecture of Vibe Wallet: MCP Server, Chrome Extension, Dashboard, and Landing Page"
+---
+
+# Architecture Overview
+
+Vibe Wallet consists of four components that together bridge AI agents to blockchain networks with zero configuration.
+
+```
+AI Client (Claude) ──SSE──▶ MCP Server (Fly.io) ──WebSocket──▶ Chrome Extension ──RPC──▶ Blockchain
+                              │ IP Pairing │
+```
+
+## Components
+
+### MCP Server
+
+The MCP Server is the central relay, built with Express, WebSocket, and SSE, and deployed on Fly.io. It accepts incoming connections from AI agents over SSE (following the Model Context Protocol transport spec) and maintains persistent WebSocket connections to Chrome Extension instances. The server performs automatic IP-based pairing so that an AI agent's requests are routed to the correct extension without any API keys or manual setup.
+
+### Chrome Extension
+
+The Chrome Extension is built with Vite, React, and CRXJS. It handles all 27 MCP tools exposed by the server, including wallet creation, transaction signing, token transfers, balance queries, and network switching. Wallets are managed entirely within the extension using viem (for EVM chains) and @solana/web3.js (for Solana). The extension also injects an EIP-1193 compatible provider into web pages, allowing dApps and the Dashboard to interact with extension-managed wallets directly.
+
+### Dashboard
+
+The Dashboard is a Vite + React application for real-time monitoring of wallet activity. It connects to the Chrome Extension through the injected EIP-1193 provider, giving users visibility into accounts, balances, transaction history, and network status without needing to open the extension popup.
+
+### Landing Page
+
+The Landing Page is a Next.js 16 marketing site that introduces Vibe Wallet, explains its capabilities, and directs users to install the extension and connect their AI agents.
+
+## End-to-End Flow
+
+1. An AI agent (e.g., Claude) connects to the MCP Server via SSE.
+2. The MCP Server extracts the client's public IP and looks for a Chrome Extension WebSocket connection from the same IP.
+3. When a match is found, the server pairs the two connections automatically.
+4. Tool calls from the AI agent are forwarded over WebSocket to the paired extension.
+5. The extension executes the requested operation on-chain and returns the result.
+6. The server relays the response back to the AI agent over SSE.
+
+This architecture keeps private keys entirely within the user's browser while allowing any MCP-compatible AI agent to orchestrate blockchain interactions.

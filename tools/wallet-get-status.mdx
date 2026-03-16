@@ -1,0 +1,40 @@
+---
+title: "wallet_getStatus"
+description: "Check the current wallet connection status"
+icon: "signal"
+---
+
+# wallet_getStatus
+
+Check the current connection status of the active wallet instance, including the connected network and account.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+A status object:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `connected` | boolean | Whether the wallet is connected |
+| `network` | string | Current network name |
+| `account` | string | Active account address |
+| `type` | string | Account type (`"evm"` or `"solana"`) |
+
+## Example
+
+```
+"Check if the wallet is connected"
+```
+
+```
+"What network am I on?"
+```
+
+## Notes
+
+- Useful for verifying connectivity before performing operations.
+- No approval required.
+- Works with both EVM and Solana account types.

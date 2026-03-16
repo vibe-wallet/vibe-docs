@@ -1,0 +1,39 @@
+---
+title: "wallet_sendToken"
+description: "Send ERC-20 tokens to an address"
+icon: "money-bill-transfer"
+---
+
+# wallet_sendToken
+
+Transfer ERC-20 tokens from the active account to a specified address. This is a state-changing operation that requires user approval.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `tokenAddress` | string | Yes | The ERC-20 token contract address (0x-prefixed) |
+| `to` | string | Yes | The recipient address (0x-prefixed) |
+| `amount` | string | Yes | Amount to send in human-readable units (e.g., `"100"` for 100 tokens) |
+| `decimals` | number | No | Token decimals. Defaults to `18` |
+
+## Returns
+
+A transaction hash string.
+
+## Example
+
+```
+"Send 50 USDC to 0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"
+```
+
+```
+"Transfer 1000 DAI to 0xABC..."
+```
+
+## Notes
+
+- **Requires approval.** The user must confirm the transaction before it is broadcast.
+- The `amount` is in human-readable token units, not raw integer amounts.
+- Make sure the `decimals` value matches the token's actual decimals (e.g., USDC uses 6, not 18).
+- For sending native ETH, use `wallet_sendTransaction` instead.

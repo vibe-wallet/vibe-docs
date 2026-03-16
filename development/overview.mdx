@@ -1,0 +1,55 @@
+---
+title: "Development Overview"
+description: "Monorepo structure, prerequisites, and quick start guide for Vibe Wallet development."
+---
+
+## Monorepo Structure
+
+Vibe Wallet is organized as a monorepo with four packages:
+
+| Package | Description | Stack |
+|---------|-------------|-------|
+| `extension/` | Chrome extension | Vite + React + CRXJS |
+| `server/` | MCP server | Express + WebSocket + SSE |
+| `dashboard/` | Monitoring UI | Vite + React |
+| `web/` | Landing page | Next.js 16 |
+
+Each package is independently buildable and has its own `package.json`.
+
+## Prerequisites
+
+- **Node.js** 18 or later
+- **pnpm** package manager
+- **Chrome** or **Chromium** browser (for extension development and testing)
+
+## Quick Start
+
+Clone the repository and install dependencies in each package:
+
+```bash
+git clone https://github.com/anthropics/vibe-wallet.git
+cd vibe-wallet
+
+# Install dependencies for each package
+cd extension && pnpm install && cd ..
+cd server && pnpm install && cd ..
+cd dashboard && pnpm install && cd ..
+cd web && pnpm install && cd ..
+```
+
+From there, refer to the setup guide for the package you want to work on:
+
+<CardGroup cols={2}>
+  <Card title="Extension" icon="puzzle-piece" href="/development/extension-setup">
+    Chrome extension with wallet UI and MCP tool handling.
+  </Card>
+  <Card title="Server" icon="server" href="/development/server-setup">
+    MCP server bridging Claude to the extension via WebSocket.
+  </Card>
+  <Card title="Dashboard" icon="chart-line" href="/development/dashboard">
+    Real-time monitoring UI for wallet state.
+  </Card>
+  <Card title="Landing Page" icon="globe" href="/development/landing-page">
+    Public-facing marketing and documentation site.
+  </Card>
+</CardGroup>

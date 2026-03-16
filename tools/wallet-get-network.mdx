@@ -1,0 +1,37 @@
+---
+title: "wallet_getNetwork"
+description: "Get the current network name and chain ID"
+icon: "network-wired"
+---
+
+# wallet_getNetwork
+
+Get information about the currently connected EVM network.
+
+## Parameters
+
+This tool takes no parameters.
+
+## Returns
+
+A network object:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `chainId` | string | The chain ID of the current network |
+| `name` | string | Human-readable network name |
+
+## Example
+
+```
+"What network am I connected to?"
+```
+
+```
+"Which chain is active?"
+```
+
+## Notes
+
+- No approval required.
+- Use `wallet_switchNetwork` to change the active network.

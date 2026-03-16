@@ -1,0 +1,96 @@
+---
+title: "Working with Solana"
+description: "Create Solana accounts, manage SOL, send transactions, and interact with the Solana network"
+---
+
+## Overview
+
+Vibe Wallet supports Solana alongside EVM chains. Solana operations use a dedicated set of tools prefixed with `solana_`, and require a Solana-type account to be active.
+
+## Setting Up
+
+### Create a Solana Account
+
+```
+Create a new Solana account called "my-sol"
+```
+
+Calls `wallet_createAccount` with:
+- **name**: `"my-sol"`
+- **type**: `"solana"`
+
+### Switch to a Solana Network
+
+```
+Switch to Solana devnet
+```
+
+Calls `wallet_switchNetwork` with `"solana-devnet"`.
+
+### Supported Clusters
+
+| Cluster | Use Case |
+|---|---|
+| **Devnet** | Development and testing. Free airdrop available. |
+| **Testnet** | Stress testing and validator experimentation. |
+| **Mainnet** | Production transactions with real SOL. |
+
+## Core Operations
+
+### Get Your Address
+
+```
+What's my Solana address?
+```
+
+Calls `solana_getAddress` and returns your base58-encoded public key.
+
+### Check Balance
+
+```
+What's my SOL balance?
+```
+
+Calls `solana_getBalance`. The value returned is in **lamports** (1 SOL = 1,000,000,000 lamports).
+
+<Tip>
+Ask the AI to convert lamports to SOL for readability: "What's my SOL balance in SOL?"
+</Tip>
+
+### Request an Airdrop
+
+```
+Airdrop 1 SOL to my account
+```
+
+Calls `solana_getAirdrop` to request 1 SOL on devnet.
+
+<Warning>
+Airdrops are only available on **devnet**. Requests on testnet or mainnet will fail. Devnet faucets may also rate-limit requests.
+</Warning>
+
+### Send SOL
+
+```
+Send 500000000 lamports to RecipientPublicKeyHere
+```
+
+Calls `solana_sendTransaction` with:
+- **to**: the recipient's public key
+- **value**: amount in lamports
+
+To send 0.5 SOL, specify `500000000` lamports.
+
+### Sign a Message
+
+```
+Sign the message "Hello Solana" with my wallet
+```
+
+Calls `solana_signMessage` and returns a base58-encoded signature. Useful for authentication and off-chain verification.
+
+## Important Notes
+
+- Always ensure your **active account is a Solana account** before using `solana_` tools. Using them with an EVM account active will return a "Method not supported for active wallet type" error.
+- Solana transactions require a small amount of SOL for fees. Make sure your account is funded before attempting transfers.
+- Lamports are the smallest unit of SOL. All value parameters use lamports, not SOL.

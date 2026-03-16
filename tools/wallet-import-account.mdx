@@ -1,0 +1,37 @@
+---
+title: "wallet_importAccount"
+description: "Import an account from a private key"
+icon: "file-import"
+---
+
+# wallet_importAccount
+
+Import an existing account using its private key. Supports both EVM and Solana key formats.
+
+## Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `name` | string | Yes | A unique name for the imported account |
+| `privateKey` | string | Yes | The private key to import |
+| `type` | string | No | Account type: `"evm"` or `"solana"`. Defaults to `"evm"` |
+
+## Returns
+
+A confirmation string indicating the account was imported.
+
+## Example
+
+```
+"Import my EVM account with the name 'external' using private key 0xabc..."
+```
+
+```
+"Import a Solana account named 'sol-imported' with this private key"
+```
+
+## Notes
+
+- Private keys are stored securely within the wallet instance.
+- No approval required.
+- Use the correct `type` parameter to match the private key format.
